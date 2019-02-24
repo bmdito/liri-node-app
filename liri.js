@@ -38,8 +38,17 @@ axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=cod
 
  
 function SpotSearch(){
+var songArg = process.argv;
+song = ""
+if(input===undefined){
+  song ="The Sign";
+} else {
+  for(var i=3; i < songArg.length; i++){
+    song = songArg[i];
+  }
+} 
  
-spotify.search({ type: 'track', query: input, limit:1 }, function(err, data) {
+spotify.search({ type: 'track', query: song, limit:1 }, function(err, data) {
   if (err) {
     return console.log('Error occurred: ' + err);
   }
@@ -48,6 +57,7 @@ spotify.search({ type: 'track', query: input, limit:1 }, function(err, data) {
   // console.log(data.tracks);
   // // console.log(data.items.album_type);
   // console.log(data.tracks.id);
+  console.log(input);
   var quick = data.tracks.items;
   console.log("Artist: "+quick[0].artists[0].name)
   console.log("Song Name: "+quick[0].name);
