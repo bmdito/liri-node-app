@@ -3,6 +3,7 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var axios = require("axios");
+var fs = require("fs");
 
 
 var spotify = new Spotify(keys.spotify);
@@ -12,7 +13,28 @@ var request = process.argv[2];
 var input = process.argv[3];
 
 
+function bandsTown(){
 
+var artist = "";
+bandArg = process.argv;
+if(input===undefined){
+  artist = "weird Al"
+} else {
+  for(i=3; i<bandArg.length; i++){
+    artist += bandArg[i];
+  }
+}
+
+axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
+  function(response) {
+    quick = response.data[0];
+    console.log("You searched for: "+ artist);
+    console.log("Venue: "+quick.venue.name);
+    console.log("Location: "+quick.venue.city);
+
+    }
+  );
+}
 
  
 function SpotSearch(){
@@ -38,26 +60,85 @@ spotify.search({ type: 'track', query: input, limit:1 }, function(err, data) {
 
 
 
-console.log(input);
 
 
-function moviethis(input){
-var url = "http://www.omdbapi.com/?t="+input+"&y=&plot=short&apikey=13915721";
+
+function moviethis(){
+var movieName = '';
+var theArg = process.argv;
+
+if(input===undefined){
+// if no movie name is entered
+  movieName = 'Mr.'+"+"+"Nobody";  
+}  else {
+// otherwise this captures movie names with 1 or more words
+  for(i=3; i<theArg.length; i++){
+      movieName += theArg[i]+"+";
+  }
+  
+}
+
+ 
+var url = "http://www.omdbapi.com/?t="+movieName+"&y=&plot=short&apikey=trilogy";
 // Then run a request with axios to the OMDB API with the movie specified
 axios.get(url)
 .then(
   function(response) {
-    console.log(response);
     
+    console.log("Title: "+response.data.Title);
+    console.log("Year: "+response.data.Year);
+    console.log("IMDB Rating: "+response.data.imdbRating);
+    console.log("Rotten Tomatoes Rating: "+response.data.Ratings[0].Value);
+    console.log("Country of Origin: "+response.data.Country);
+    console.log("Language: "+response.data.Language);
+    console.log("Plot: "+response.data.Plot);
+    console.log("Actors :"+response.data.Actors);
     }
   );
 }
 
-if(request == "spotify-this"){
-  SpotSearch();
-} else if(request =="movie-this"){
-  moviethis(input);
+function whatItSays(){
+
+  fs.readFile("random.txt", "utf8", function(error,data){
+
+    if(error){
+      return console.log(error);
+    }
+
+    var theCommand = data.split(',');
+   
+
+    request = theCommand[0];
+    input = theCommand[1];
+
+    commandCheck();
+
+  });
 }
+
+function commandCheck(){
+
+if(request == "spotify-this-song"){
+  SpotSearch();
+}else if(request === 'movie-this'){
+  moviethis();
+} else if(request === 'concert-this'){
+  bandsTown();
+
+}else if (request === 'do-what-it-says'){
+  whatItSays();
+} else {
+  console.log("sorry, you used an invalid command!");
+}
+
+}
+
+commandCheck();
+
+
+
+
+
 
 
 
