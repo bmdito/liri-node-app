@@ -4,8 +4,7 @@ var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var axios = require("axios");
 var fs = require("fs");
-
-
+var moment = require('moment');
 var spotify = new Spotify(keys.spotify);
 
 
@@ -22,15 +21,18 @@ if(input===undefined){
 } else {
   for(i=3; i<bandArg.length; i++){
     artist += bandArg[i];
+    // console.log(artist);
   }
 }
 
-axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
+axios.get("https://rest.bandsintown.com/artists/" + artist +"/events?app_id=codingbootcamp").then(
   function(response) {
     quick = response.data[0];
-    console.log("You searched for: "+ artist);
+    // console.log("You searched for: "+ artist);
     console.log("Venue: "+quick.venue.name);
     console.log("Location: "+quick.venue.city);
+    
+    console.log(moment(quick.datetime).format('MM-DD-YY'));
 
     }
   );
@@ -39,16 +41,16 @@ axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=cod
  
 function SpotSearch(){
 var songArg = process.argv;
-song = ""
+input = input+"+";
 if(input===undefined){
-  song ="The Sign";
+  input ="The Sign Ace of Base";
 } else {
-  for(var i=3; i < songArg.length; i++){
-    song = songArg[i];
+  for(var i=4; i < songArg.length; i++){
+    input += songArg[i]+"+";
   }
 } 
  
-spotify.search({ type: 'track', query: song, limit:1 }, function(err, data) {
+spotify.search({ type: 'track', query: input, limit:1 }, function(err, data) {
   if (err) {
     return console.log('Error occurred: ' + err);
   }
@@ -120,6 +122,8 @@ function whatItSays(){
 
     request = theCommand[0];
     input = theCommand[1];
+
+    
 
     commandCheck();
 
