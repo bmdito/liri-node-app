@@ -8,7 +8,7 @@ BEFORE BEGINNING you will have to save your own Spotify API credentials into a .
 
 
 
-This app allows you to search any movie using the OMDb APIand retrieve information. for example, to find out about The Matrix you would simply enter:
+This app allows you to search any movie using the OMDb API and retrieve information. for example, to find out about The Matrix you would simply enter:
 node liri movie-this The Matrix
 
 ![movie-this](https://user-images.githubusercontent.com/44068902/63816524-60e5fb80-c8ed-11e9-8846-03c8b54e9679.gif)
